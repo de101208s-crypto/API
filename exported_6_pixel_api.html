@@ -1,0 +1,3194 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0b0b0d;
+
+    font-family:
+        "M PLUS Rounded 1c",
+        "Segoe UI Rounded",
+        "Hiragino Maru Gothic ProN",
+        "Yu Gothic UI",
+        "Noto Sans JP",
+        "Quicksand",
+        sans-serif;
+
+    color: white;
+}
+
+button {
+    font-family: inherit;
+}
+
+.rounded-num {
+    font-family:
+        "Fredoka",
+        "M PLUS Rounded 1c",
+        "Segoe UI Rounded",
+        "Hiragino Maru Gothic ProN",
+        "Yu Gothic UI",
+        "Quicksand",
+        sans-serif;
+
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+
+/* =========================================================
+   全体
+========================================================= */
+
+.dashboard {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: row;
+
+    background: #0b0b0d;
+}
+
+.col {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.left-col {
+    flex: 1 1 auto;
+}
+
+.right-col {
+    flex: 0 0 clamp(300px, 30vw, 420px);
+
+    position: relative;
+
+    padding: 20px;
+}
+
+
+/* =========================================================
+   左ページ
+========================================================= */
+
+.col-pages {
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-snap-type: y mandatory;
+
+    scrollbar-width: none;
+
+    overscroll-behavior: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.col-pages::-webkit-scrollbar {
+    display: none;
+}
+
+.col-page {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+
+    overflow: hidden;
+
+    padding: 20px;
+}
+
+.page-label {
+    position: absolute;
+
+    top: 24px;
+    left: 28px;
+
+    font-size: clamp(13px, 1.6vw, 18px);
+
+    color: rgba(255,255,255,0.4);
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   左インジケーター
+========================================================= */
+
+.left-indicator,
+.right-indicator {
+
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 50;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.left-indicator {
+    left: 18px;
+}
+
+.right-indicator {
+    left: 4px;
+}
+
+.scroll-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.25);
+
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+.scroll-dot.active {
+    background: white;
+
+    transform: scale(1.45);
+}
+
+
+/* =========================================================
+   パネル
+========================================================= */
+
+.panel {
+    border-radius: 28px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.45);
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+.clock-panel {
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            #232323 0%,
+            #111 70%
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding:
+        clamp(30px,4vw,50px)
+        clamp(40px,6vw,70px);
+}
+
+.clock-time {
+
+    display: grid;
+
+    grid-template-columns:
+        max-content
+        max-content
+        max-content;
+
+    grid-template-rows:
+        auto
+        auto;
+
+    column-gap: 8px;
+
+    align-items: start;
+
+    line-height: 0.82;
+
+    user-select: none;
+}
+
+.clock-hours,
+.clock-minutes,
+.clock-seconds {
+
+    display: inline-block;
+
+    width: 2ch;
+
+    text-align: center;
+}
+
+.clock-colon {
+
+    display: inline-block;
+
+    width: 0.7ch;
+
+    text-align: center;
+}
+
+.clock-hours {
+
+    grid-column: 1;
+    grid-row: 1;
+
+    font-size:
+        clamp(80px,15vw,220px);
+
+    font-weight: 500;
+
+    letter-spacing: -2px;
+
+    color: #ff493f;
+
+    text-shadow:
+        0 0 18px rgba(255,73,63,0.10);
+}
+
+.clock-colon {
+
+    grid-column: 2;
+    grid-row: 1;
+
+    font-size:
+        clamp(80px,15vw,220px);
+
+    font-weight: 500;
+
+    color: #ffffff;
+
+    line-height: 0.78;
+}
+
+.clock-minutes {
+
+    grid-column: 3;
+    grid-row: 1;
+
+    font-size:
+        clamp(80px,15vw,220px);
+
+    font-weight: 500;
+
+    letter-spacing: -2px;
+
+    color: #aeeeff;
+
+    text-shadow:
+        0 0 18px rgba(174,238,255,0.10);
+}
+
+.clock-seconds {
+
+    grid-column: 3;
+    grid-row: 2;
+
+    justify-self: end;
+
+    margin-top: 10px;
+
+    font-size:
+        clamp(80px,15vw,220px);
+
+    font-weight: 500;
+
+    letter-spacing: -2px;
+
+    color: #e8faff;
+
+    text-shadow:
+        0 0 18px rgba(232,250,255,0.10);
+}
+
+.clock-date {
+
+    margin-top: 22px;
+
+    text-align: center;
+
+    font-size:
+        clamp(16px,2vw,22px);
+
+    font-weight: 400;
+
+    color: rgba(255,255,255,0.6);
+}
+
+
+/* =========================================================
+   WEATHER
+========================================================= */
+
+.right-pages {
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-snap-type: y mandatory;
+
+    scrollbar-width: none;
+
+    overscroll-behavior: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.right-pages::-webkit-scrollbar {
+    display: none;
+}
+
+.right-page {
+
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   WEATHER CARD
+========================================================= */
+
+.weather-panel {
+
+    width: 100%;
+
+    max-width: 320px;
+
+    height: 440px;
+    min-height: 440px;
+    max-height: 440px;
+
+    padding: 22px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    background:
+        linear-gradient(
+            165deg,
+            #6fb1f0 0%,
+            #3a7fd6 55%,
+            #2e63b0 100%
+        );
+
+    transition:
+        background 0.6s ease;
+
+    flex-shrink: 0;
+}
+
+.weather-top {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.weather-location {
+
+    font-size: 20px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.2px;
+}
+
+.weather-condition-small {
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    color:
+        rgba(255,255,255,0.85);
+}
+
+.weather-middle {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    margin: 6px 0;
+}
+
+.weather-icon-wrap {
+
+    width: 74px;
+    height: 74px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.weather-icon-wrap svg {
+
+    width: 100%;
+    height: 100%;
+}
+
+.weather-temp {
+
+    font-size: 64px;
+
+    font-weight: 300;
+
+    letter-spacing: -2px;
+
+    line-height: 1;
+}
+
+.weather-bottom {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.weather-divider {
+
+    height: 1px;
+
+    background:
+        rgba(255,255,255,0.28);
+
+    width: 100%;
+}
+
+.weather-hilo {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 15px;
+
+    color:
+        rgba(255,255,255,0.9);
+}
+
+.weather-hilo span.dim {
+
+    color:
+        rgba(255,255,255,0.65);
+}
+
+.weather-extra {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 13px;
+
+    color:
+        rgba(255,255,255,0.7);
+}
+
+.weather-updated {
+
+    font-size: 11px;
+
+    color:
+        rgba(255,255,255,0.5);
+
+    text-align: right;
+}
+
+.weather-error {
+
+    font-size: 12px;
+
+    color: #ffdca8;
+
+    background:
+        rgba(0,0,0,0.3);
+
+    border-radius: 10px;
+
+    padding: 8px 10px;
+
+    line-height: 1.5;
+
+    display: none;
+}
+
+.weather-error.show {
+    display: block;
+}
+
+.weather-error a {
+
+    color: #ffe9c2;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap:
+        clamp(24px,4vw,40px);
+}
+
+.timer-time-display {
+
+    display: flex;
+
+    gap: 8px;
+
+    align-items: flex-start;
+
+    line-height: 0.82;
+
+    user-select: none;
+}
+
+.timer-time-display.hidden {
+    display: none !important;
+}
+
+.timer-hours-display,
+.timer-minutes-display,
+.timer-seconds-display {
+
+    font-size:
+        clamp(70px,13vw,170px);
+
+    font-weight: 500;
+
+    width: 2ch;
+
+    text-align: center;
+}
+
+.timer-hours-display {
+
+    color: #ff493f;
+
+    text-shadow:
+        0 0 18px rgba(255,73,63,0.10);
+}
+
+.timer-minutes-display {
+
+    color: #aeeeff;
+
+    text-shadow:
+        0 0 18px rgba(174,238,255,0.10);
+}
+
+.timer-seconds-display {
+
+    color: #e8faff;
+
+    text-shadow:
+        0 0 18px rgba(232,250,255,0.10);
+}
+
+.timer-colon-display,
+.timer-colon2-display {
+
+    font-size:
+        clamp(70px,13vw,170px);
+
+    font-weight: 500;
+
+    color: white;
+
+    width: 0.7ch;
+
+    text-align: center;
+}
+
+.time-picker {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    user-select: none;
+
+    overflow: hidden;
+
+    padding: 15px 20px;
+
+    border-radius: 28px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.25);
+
+    flex-shrink: 0;
+}
+
+.time-column {
+
+    position: relative;
+
+    width:
+        clamp(60px,8vw,100px);
+
+    height: 180px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-snap-type: y mandatory;
+
+    scrollbar-width: none;
+
+    flex:
+        0 0 clamp(60px,8vw,100px);
+
+    user-select: none;
+
+    touch-action: pan-y;
+}
+
+.time-column::-webkit-scrollbar {
+    display: none;
+}
+
+.wheel-spacer {
+
+    height: 65px;
+
+    flex-shrink: 0;
+}
+
+.time-value {
+
+    width: 100%;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    scroll-snap-align: center;
+
+    font-size:
+        clamp(26px,4vw,44px);
+
+    color:
+        rgba(255,255,255,0.28);
+
+    transition:
+        color 0.15s,
+        transform 0.15s;
+
+    flex-shrink: 0;
+}
+
+.time-value.selected {
+
+    color: #ffffff;
+
+    transform: scale(1.15);
+
+    font-weight: 500;
+
+    text-shadow:
+        0 0 18px rgba(110,180,255,0.5);
+}
+
+.time-separator {
+
+    font-size:
+        clamp(28px,4vw,44px);
+
+    color: #9cc9ff;
+
+    text-shadow:
+        0 0 12px rgba(80,150,255,0.45);
+}
+
+.time-picker::before,
+.time-picker::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 18px;
+    right: 18px;
+
+    height: 1px;
+
+    background:
+        rgba(150,200,255,0.45);
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
+.time-picker::before {
+    top: calc(50% - 25px);
+}
+
+.time-picker::after {
+    top: calc(50% + 25px);
+}
+
+.timer-page.running .time-picker {
+    display: none !important;
+}
+
+.tool-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.tool-button {
+
+    min-width: 120px;
+
+    padding: 13px 25px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    border:
+        1px solid rgba(255,255,255,0.14);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.15);
+}
+
+.tool-button:active {
+    transform: scale(0.96);
+}
+
+.start-button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6f65,
+            #ff493f
+        );
+
+    box-shadow:
+        0 8px 25px rgba(255,73,63,0.28);
+}
+
+.cancel-button {
+
+    background:
+        rgba(255,255,255,0.09);
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .right-col {
+        flex: 1 1 auto;
+    }
+}
+
+
+/* =========================================================
+   1280x720など
+========================================================= */
+
+@media (min-width: 1000px)
+       and (max-width: 1366px)
+       and (max-height: 800px) {
+
+    .clock-panel {
+
+        padding:
+            40px 56px;
+    }
+
+    .clock-hours,
+    .clock-colon,
+    .clock-minutes,
+    .clock-seconds {
+
+        font-size: 190px;
+
+        letter-spacing: -3px;
+    }
+
+    .clock-date {
+
+        margin-top: 18px;
+
+        font-size: 19px;
+    }
+
+    .timer-hours-display,
+    .timer-minutes-display,
+    .timer-seconds-display,
+    .timer-colon-display,
+    .timer-colon2-display {
+
+        font-size: 150px;
+    }
+
+    .weather-panel,
+    .media-panel {
+
+        max-width: 280px;
+
+        height: 440px;
+        min-height: 440px;
+        max-height: 440px;
+    }
+
+    .weather-temp {
+        font-size: 58px;
+    }
+
+    /*
+       1280x720でもジャケット固定。
+       カード幅が280pxになるので、
+       内側に収まるサイズへ変更。
+    */
+
+    .media-art {
+
+        width: 220px;
+        height: 220px;
+
+        min-width: 220px;
+        min-height: 220px;
+
+        max-width: 220px;
+        max-height: 220px;
+
+        flex:
+            0 0 220px;
+    }
+
+    .media-buttons {
+        margin-top: 14px;
+    }
+}
+
+/* =========================================================
+   夜間減光 (追加)
+========================================================= */
+
+#nightDim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 9999;
+
+    background: #000;
+    opacity: 0;
+
+    /* 触っても下の画面をそのまま操作できる */
+    pointer-events: none;
+
+    transition: opacity 3s ease;
+}
+
+/* =========================================================
+   スマホカード (追加)
+========================================================= */
+
+.phone-panel {
+
+    width: 100%;
+
+    max-width: 320px;
+
+    height: 440px;
+    min-height: 440px;
+    max-height: 440px;
+
+    padding: 22px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            #2b2f36 0%,
+            #131416 75%
+        );
+
+    flex-shrink: 0;
+}
+
+.phone-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.phone-title {
+
+    font-size: 20px;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+}
+
+.phone-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 13px;
+
+    color: rgba(255,255,255,0.7);
+}
+
+.phone-status-dot {
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.3);
+
+    transition: background 0.3s;
+}
+
+.phone-panel.online .phone-status-dot {
+
+    background: #aeeeff;
+
+    box-shadow: 0 0 8px rgba(174,238,255,0.5);
+}
+
+.phone-battery {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    transition: opacity 0.3s;
+}
+
+.phone-battery-row {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+}
+
+.phone-battery-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+
+    color: rgba(255,255,255,0.65);
+}
+
+.phone-charging {
+
+    display: none;
+
+    font-size: 11px;
+
+    color: #aeeeff;
+
+    border: 1px solid rgba(174,238,255,0.5);
+
+    border-radius: 999px;
+
+    padding: 1px 8px;
+}
+
+.phone-charging.show {
+    display: inline-block;
+}
+
+.phone-battery-value {
+
+    font-size: 44px;
+
+    font-weight: 300;
+
+    letter-spacing: -1px;
+
+    line-height: 1;
+}
+
+.phone-battery-bar {
+
+    height: 10px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.12);
+
+    overflow: hidden;
+}
+
+.phone-battery-fill {
+
+    width: 0%;
+
+    height: 100%;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7fd8f0,
+            #aeeeff
+        );
+
+    transition: width 0.6s ease;
+}
+
+.phone-section-label {
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    color: rgba(255,255,255,0.45);
+}
+
+.phone-notif-list {
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+
+    /* 通知リストのスクロールが、右側ページの切り替えに伝わらないようにする */
+    overscroll-behavior: contain;
+
+    transition: opacity 0.3s;
+}
+
+.phone-notif-list::-webkit-scrollbar {
+    display: none;
+}
+
+.phone-notif {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 16px;
+
+    background: rgba(255,255,255,0.07);
+
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.phone-notif-body {
+
+    flex: 1 1 auto;
+
+    min-width: 0;
+}
+
+/* アプリアイコン (画像が無いときは、アプリ名の頭文字を入れた色つきの角丸) */
+.phone-notif-icon {
+
+    display: block;
+
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 32px;
+
+    border-radius: 9px;
+
+    object-fit: cover;
+
+    background: rgba(255,255,255,0.1);
+}
+
+.phone-notif-icon.fallback {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    color: #fff;
+
+    user-select: none;
+}
+
+.phone-notif-head {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 3px;
+}
+
+.phone-notif-app {
+
+    font-size: 12px;
+
+    color: #aeeeff;
+}
+
+.phone-notif-time {
+
+    font-size: 11px;
+
+    color: rgba(255,255,255,0.5);
+}
+
+.phone-notif-subject {
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.phone-notif-text {
+
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+
+    color: rgba(255,255,255,0.7);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.phone-notif-empty {
+
+    margin: auto;
+
+    font-size: 14px;
+
+    color: rgba(255,255,255,0.4);
+}
+
+/* 未接続のときは、最後に受け取った内容を薄く表示する */
+.phone-panel:not(.online) .phone-battery,
+.phone-panel:not(.online) .phone-notif-list {
+    opacity: 0.4;
+}
+
+/* 1280x720など (天気カードと同じく幅を狭める) */
+@media (min-width: 1000px)
+       and (max-width: 1366px)
+       and (max-height: 800px) {
+
+    .phone-panel {
+        max-width: 280px;
+    }
+}
+</style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>DesktopThing</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- 左：時計・タイマー -->
+    <div class="col left-col">
+
+        <div class="col-pages" id="leftPages">
+
+            <!-- CLOCK -->
+            <section class="col-page">
+
+                <div class="panel clock-panel">
+
+                    <div class="clock-time">
+
+                        <div class="clock-hours rounded-num" id="clockHours">00</div>
+
+                        <div class="clock-colon rounded-num">:</div>
+
+                        <div class="clock-minutes rounded-num" id="clockMinutes">00</div>
+
+                        <div class="clock-seconds rounded-num" id="clockSeconds">00</div>
+
+                    </div>
+
+                    <div class="clock-date" id="clockDate">
+                        Friday, August 21
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TIMER -->
+            <section class="col-page timer-page" id="timerPage">
+
+                <div class="page-label">TIMER</div>
+
+                <div class="timer-content">
+
+                    <div class="timer-time-display hidden" id="timerTimeDisplay">
+
+                        <div class="timer-hours-display rounded-num" id="timerHoursDisplay">
+                            00
+                        </div>
+
+                        <div class="timer-colon-display rounded-num">:</div>
+
+                        <div class="timer-minutes-display rounded-num" id="timerMinutesDisplay">
+                            00
+                        </div>
+
+                        <div class="timer-colon2-display rounded-num">:</div>
+
+                        <div class="timer-seconds-display rounded-num" id="timerSecondsDisplay">
+                            00
+                        </div>
+
+                    </div>
+
+
+                    <div class="time-picker" id="timePicker">
+
+                        <div class="time-column" id="timerHours"></div>
+
+                        <div class="time-separator">:</div>
+
+                        <div class="time-column" id="timerMinutes"></div>
+
+                        <div class="time-separator">:</div>
+
+                        <div class="time-column" id="timerSeconds"></div>
+
+                    </div>
+
+
+                    <div class="tool-buttons">
+
+                        <button class="tool-button cancel-button" id="timerCancel">
+                            RESET
+                        </button>
+
+                        <button class="tool-button start-button" id="timerStart">
+                            START
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- 時計・タイマーの白丸 -->
+        <div class="left-indicator" id="leftIndicator">
+
+            <div class="scroll-dot active" data-index="0"></div>
+            <div class="scroll-dot" data-index="1"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- 右：天気 -->
+    <div class="col right-col">
+
+        <div class="right-pages" id="rightPages">
+
+
+            <!-- ==============================
+                 WEATHER
+            =============================== -->
+
+            <section class="right-page">
+
+                <div class="panel weather-panel" id="weatherPanel">
+
+                    <div class="weather-top">
+
+                        <div class="weather-location">
+                            交野市
+                        </div>
+
+                        <div class="weather-condition-small" id="weatherConditionSmall">
+                            読み込み中…
+                        </div>
+
+                    </div>
+
+
+                    <div class="weather-middle">
+
+                        <div class="weather-icon-wrap" id="weatherIconWrap"></div>
+
+                        <div class="weather-temp rounded-num" id="weatherTemp">
+                            --°
+                        </div>
+
+                    </div>
+
+
+                    <div class="weather-bottom">
+
+                        <div class="weather-error" id="weatherError"></div>
+
+                        <div class="weather-divider"></div>
+
+                        <div class="weather-hilo">
+
+                            <span>
+                                <span class="dim">最高</span>
+                                <span id="weatherHigh">--°</span>
+                            </span>
+
+                            <span>
+                                <span class="dim">最低</span>
+                                <span id="weatherLow">--°</span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="weather-extra">
+
+                            <span>
+                                湿度
+                                <span id="weatherHumidity">--%</span>
+                            </span>
+
+                            <span>
+                                体感
+                                <span id="weatherFeels">--°</span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="weather-updated" id="weatherUpdated"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==============================
+                 PHONE (Pixelの電池・通知)
+            =============================== -->
+
+            <section class="right-page">
+
+                <div class="panel phone-panel" id="phonePanel">
+
+                    <div class="phone-header">
+
+                        <div class="phone-title">PHONE</div>
+
+                        <div class="phone-status">
+                            <span class="phone-status-dot"></span>
+                            <span id="phoneStatusText">未接続</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="phone-battery">
+
+                        <div class="phone-battery-row">
+
+                            <div class="phone-battery-label">
+                                BATT
+                                <span class="phone-charging" id="phoneCharging">充電中</span>
+                            </div>
+
+                            <div class="phone-battery-value rounded-num" id="phoneBatteryValue">
+                                --%
+                            </div>
+
+                        </div>
+
+                        <div class="phone-battery-bar">
+                            <div class="phone-battery-fill" id="phoneBatteryFill"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="phone-section-label">NOTIF</div>
+
+                    <div class="phone-notif-list" id="phoneNotifList">
+                        <div class="phone-notif-empty">通知はありません</div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==============================
+                 TRAIN (学研都市線 星田駅 京橋方面)
+                 ※右側は天気のみ表示のため一旦非表示
+            =============================== -->
+<!-- ==============================
+                 MEDIA CONTROL
+                 ※右側は天気のみ表示のため一旦非表示
+            =============================== -->
+</div>
+
+
+        <!-- 右カードの白丸 (追加) -->
+        <div class="right-indicator" id="rightIndicator"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 夜間減光用オーバーレイ (追加) -->
+<div id="nightDim"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+<script>
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+    document.getElementById("clockHours").textContent =
+        String(now.getHours()).padStart(2, "0");
+
+    document.getElementById("clockMinutes").textContent =
+        String(now.getMinutes()).padStart(2, "0");
+
+    document.getElementById("clockSeconds").textContent =
+        String(now.getSeconds()).padStart(2, "0");
+
+    const weekdays = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
+    document.getElementById("clockDate").textContent =
+        weekdays[now.getDay()] +
+        ", " +
+        months[now.getMonth()] +
+        " " +
+        now.getDate();
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function createWheel(id, max) {
+
+    const column = document.getElementById(id);
+
+    const topSpacer = document.createElement("div");
+    topSpacer.className = "wheel-spacer";
+    column.appendChild(topSpacer);
+
+    for (let i = 0; i <= max; i++) {
+
+        const value = document.createElement("div");
+
+        value.className =
+            "time-value rounded-num";
+
+        value.textContent =
+            String(i).padStart(2, "0");
+
+        column.appendChild(value);
+    }
+
+    const bottomSpacer = document.createElement("div");
+    bottomSpacer.className = "wheel-spacer";
+    column.appendChild(bottomSpacer);
+}
+
+
+createWheel("timerHours", 23);
+createWheel("timerMinutes", 59);
+createWheel("timerSeconds", 59);
+
+
+function getSelectedIndex(column) {
+
+    const values =
+        column.querySelectorAll(".time-value");
+
+    const count = values.length;
+
+    if (count === 0) {
+        return 0;
+    }
+
+    return Math.max(
+        0,
+        Math.min(
+            count - 1,
+            Math.round(column.scrollTop / 50)
+        )
+    );
+}
+
+
+function updateSelected(column) {
+
+    const values =
+        column.querySelectorAll(".time-value");
+
+    const index =
+        getSelectedIndex(column);
+
+    values.forEach((value, i) => {
+
+        value.classList.toggle(
+            "selected",
+            i === index
+        );
+
+    });
+}
+
+
+document.querySelectorAll(".time-column").forEach(
+    column => {
+
+        let scrollTimer;
+
+        column.addEventListener(
+            "scroll",
+            () => {
+
+                if (column.scrollLeft !== 0) {
+                    column.scrollLeft = 0;
+                }
+
+                updateSelected(column);
+
+                clearTimeout(scrollTimer);
+
+                scrollTimer =
+                    setTimeout(() => {
+
+                        const index =
+                            getSelectedIndex(column);
+
+                        column.scrollTo({
+                            top: index * 50,
+                            behavior: "smooth"
+                        });
+
+                        updateSelected(column);
+
+                    }, 100);
+
+            },
+            { passive: true }
+        );
+
+        column.scrollLeft = 0;
+        column.scrollTop = 0;
+
+        updateSelected(column);
+    }
+);
+
+
+const timerPage =
+    document.getElementById("timerPage");
+
+const timerStart =
+    document.getElementById("timerStart");
+
+const timerCancel =
+    document.getElementById("timerCancel");
+
+const timerTimeDisplay =
+    document.getElementById("timerTimeDisplay");
+
+
+let timerSeconds = 0;
+let timerInterval = null;
+let timerRunning = false;
+
+
+function getTimerSelectedTime() {
+
+    const hours =
+        getSelectedIndex(
+            document.getElementById("timerHours")
+        );
+
+    const minutes =
+        getSelectedIndex(
+            document.getElementById("timerMinutes")
+        );
+
+    const seconds =
+        getSelectedIndex(
+            document.getElementById("timerSeconds")
+        );
+
+    return (
+        hours * 3600 +
+        minutes * 60 +
+        seconds
+    );
+}
+
+
+function updateTimerDisplay() {
+
+    const hours =
+        Math.floor(timerSeconds / 3600);
+
+    const minutes =
+        Math.floor(
+            (timerSeconds % 3600) / 60
+        );
+
+    const seconds =
+        timerSeconds % 60;
+
+    document.getElementById(
+        "timerHoursDisplay"
+    ).textContent =
+        String(hours).padStart(2, "0");
+
+    document.getElementById(
+        "timerMinutesDisplay"
+    ).textContent =
+        String(minutes).padStart(2, "0");
+
+    document.getElementById(
+        "timerSecondsDisplay"
+    ).textContent =
+        String(seconds).padStart(2, "0");
+}
+
+
+function playTimerSound() {
+
+    try {
+
+        const AudioCtx =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        const ctx =
+            new AudioCtx();
+
+        const setIntervalTime = 2.0;
+        const setCount = 4;
+
+        const beepOffsets = [
+            0,
+            0.3,
+            0.6
+        ];
+
+        for (
+            let s = 0;
+            s < setCount;
+            s++
+        ) {
+
+            const setStart =
+                s * setIntervalTime;
+
+            beepOffsets.forEach(
+                (t, i) => {
+
+                    const osc =
+                        ctx.createOscillator();
+
+                    const gain =
+                        ctx.createGain();
+
+                    osc.type = "sine";
+
+                    osc.frequency.value =
+                        i === 2
+                            ? 1046.5
+                            : 880;
+
+                    const startTime =
+                        ctx.currentTime +
+                        setStart +
+                        t;
+
+                    gain.gain.setValueAtTime(
+                        0.0001,
+                        startTime
+                    );
+
+                    gain.gain
+                        .exponentialRampToValueAtTime(
+                            0.35,
+                            startTime + 0.02
+                        );
+
+                    gain.gain
+                        .exponentialRampToValueAtTime(
+                            0.0001,
+                            startTime + 0.28
+                        );
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(startTime);
+
+                    osc.stop(
+                        startTime + 0.3
+                    );
+                }
+            );
+        }
+
+        setTimeout(
+            () => {
+
+                try {
+                    ctx.close();
+                } catch (e) {}
+
+            },
+            (setCount * setIntervalTime + 1) * 1000
+        );
+
+    } catch (e) {}
+}
+
+
+timerStart.addEventListener(
+    "click",
+    () => {
+
+        if (timerRunning) {
+
+            clearInterval(timerInterval);
+
+            timerRunning = false;
+
+            timerStart.textContent =
+                "RESUME";
+
+            return;
+        }
+
+        if (timerSeconds === 0) {
+
+            timerSeconds =
+                getTimerSelectedTime();
+
+            if (timerSeconds <= 0) {
+                return;
+            }
+        }
+
+        timerRunning = true;
+
+        timerPage.classList.add(
+            "running"
+        );
+
+        timerTimeDisplay.classList.remove(
+            "hidden"
+        );
+
+        timerStart.textContent =
+            "PAUSE";
+
+        updateTimerDisplay();
+
+        timerInterval =
+            setInterval(
+                () => {
+
+                    timerSeconds--;
+
+                    updateTimerDisplay();
+
+                    if (timerSeconds <= 0) {
+
+                        clearInterval(
+                            timerInterval
+                        );
+
+                        timerInterval = null;
+
+                        timerRunning = false;
+
+                        timerSeconds = 0;
+
+                        updateTimerDisplay();
+
+                        timerStart.textContent =
+                            "START";
+
+                        playTimerSound();
+                    }
+
+                },
+                1000
+            );
+    }
+);
+
+
+timerCancel.addEventListener(
+    "click",
+    () => {
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+        timerRunning = false;
+        timerSeconds = 0;
+
+        timerPage.classList.remove(
+            "running"
+        );
+
+        timerTimeDisplay.classList.add(
+            "hidden"
+        );
+
+        timerStart.textContent =
+            "START";
+
+        updateTimerDisplay();
+
+        document
+            .querySelectorAll(
+                "#timerPage .time-column"
+            )
+            .forEach(
+                column => {
+
+                    column.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                    column.scrollLeft = 0;
+
+                    updateSelected(column);
+                }
+            );
+    }
+);
+
+
+
+/* =========================================================
+   左側 時計 ⇔ タイマー
+========================================================= */
+
+function bindColumnIndicator(
+    pagesId,
+    indicatorId
+) {
+
+    const pagesEl =
+        document.getElementById(pagesId);
+
+    const dots =
+        document.querySelectorAll(
+            "#" +
+            indicatorId +
+            " .scroll-dot"
+        );
+
+    const pageEls =
+        pagesEl.querySelectorAll(
+            ".col-page"
+        );
+
+    function update() {
+
+        const scrollTop =
+            pagesEl.scrollTop;
+
+        const pageHeight =
+            pagesEl.clientHeight;
+
+        if (pageHeight <= 0) {
+            return;
+        }
+
+        let index =
+            Math.round(
+                scrollTop / pageHeight
+            );
+
+        index =
+            Math.max(
+                0,
+                Math.min(
+                    pageEls.length - 1,
+                    index
+                )
+            );
+
+        dots.forEach(
+            (dot, i) => {
+
+                dot.classList.toggle(
+                    "active",
+                    i === index
+                );
+            }
+        );
+    }
+
+    pagesEl.addEventListener(
+        "scroll",
+        update,
+        { passive: true }
+    );
+
+    update();
+}
+
+
+bindColumnIndicator(
+    "leftPages",
+    "leftIndicator"
+);
+
+
+/* =========================================================
+   右側 天気 ⇔ メディア
+========================================================= */
+/* =========================================================
+   WEATHER
+   Open-Meteo / 交野市
+========================================================= */
+
+const WEATHER_LAT = 34.7025;
+const WEATHER_LON = 135.6667;
+
+const FORECAST_URL =
+    "https://api.open-meteo.com/v1/forecast" +
+    "?latitude=" + WEATHER_LAT +
+    "&longitude=" + WEATHER_LON +
+    "&current=" +
+    "temperature_2m," +
+    "relative_humidity_2m," +
+    "apparent_temperature," +
+    "weather_code," +
+    "is_day" +
+    "&daily=" +
+    "temperature_2m_max," +
+    "temperature_2m_min" +
+    "&timezone=Asia%2FTokyo";
+
+
+const ICONS = {
+
+    sun:
+        '<svg viewBox="0 0 100 100">' +
+        '<circle cx="50" cy="50" r="22" fill="#FFD34D"/>' +
+        '<g stroke="#FFD34D" stroke-width="6" stroke-linecap="round">' +
+        '<line x1="50" y1="6" x2="50" y2="20"/>' +
+        '<line x1="50" y1="80" x2="50" y2="94"/>' +
+        '<line x1="6" y1="50" x2="20" y2="50"/>' +
+        '<line x1="80" y1="50" x2="94" y2="50"/>' +
+        '<line x1="18" y1="18" x2="28" y2="28"/>' +
+        '<line x1="72" y1="72" x2="82" y2="82"/>' +
+        '<line x1="82" y1="18" x2="72" y2="28"/>' +
+        '<line x1="28" y1="72" x2="18" y2="82"/>' +
+        '</g></svg>',
+
+    moon:
+        '<svg viewBox="0 0 100 100">' +
+        '<path d="M62 12a38 38 0 1 0 26 62 30 30 0 0 1-26-62z" fill="#F1F3F8"/>' +
+        '</svg>',
+
+    cloud:
+        '<svg viewBox="0 0 100 100">' +
+        '<path d="M28 68a20 20 0 0 1-2-40 26 26 0 0 1 50-8 22 22 0 0 1-4 48H28z" fill="#E7ECF2"/>' +
+        '</svg>',
+
+    cloudSun:
+        '<svg viewBox="0 0 100 100">' +
+        '<circle cx="68" cy="30" r="16" fill="#FFD34D"/>' +
+        '<path d="M22 70a18 18 0 0 1-2-36 24 24 0 0 1 45-8 20 20 0 0 1-4 44H22z" fill="#E7ECF2"/>' +
+        '</svg>',
+
+    rain:
+        '<svg viewBox="0 0 100 100">' +
+        '<path d="M26 56a18 18 0 0 1-2-36 24 24 0 0 1 45-7 20 20 0 0 1-4 43H26z" fill="#C7D2DE"/>' +
+        '<g stroke="#7FB3F5" stroke-width="6" stroke-linecap="round">' +
+        '<line x1="34" y1="74" x2="30" y2="90"/>' +
+        '<line x1="52" y1="74" x2="48" y2="90"/>' +
+        '<line x1="70" y1="74" x2="66" y2="90"/>' +
+        '</g></svg>',
+
+    snow:
+        '<svg viewBox="0 0 100 100">' +
+        '<path d="M26 56a18 18 0 0 1-2-36 24 24 0 0 1 45-7 20 20 0 0 1-4 43H26z" fill="#D7E3EE"/>' +
+        '<g fill="#EAF3FC">' +
+        '<circle cx="34" cy="80" r="4"/>' +
+        '<circle cx="52" cy="86" r="4"/>' +
+        '<circle cx="70" cy="80" r="4"/>' +
+        '</g></svg>',
+
+    thunder:
+        '<svg viewBox="0 0 100 100">' +
+        '<path d="M26 54a18 18 0 0 1-2-36 24 24 0 0 1 45-6 20 20 0 0 1-4 42H26z" fill="#9FAFC2"/>' +
+        '<polygon points="58,60 44,80 52,80 42,96 68,72 58,72" fill="#FFD34D"/>' +
+        '</svg>',
+
+    fog:
+        '<svg viewBox="0 0 100 100">' +
+        '<g stroke="#C7D2DE" stroke-width="7" stroke-linecap="round">' +
+        '<line x1="16" y1="38" x2="84" y2="38"/>' +
+        '<line x1="10" y1="54" x2="90" y2="54"/>' +
+        '<line x1="16" y1="70" x2="84" y2="70"/>' +
+        '</g></svg>'
+};
+
+
+function getWeatherInfo(
+    code,
+    isDay
+) {
+
+    const day =
+        isDay === 1;
+
+    if (code === 0) {
+
+        return {
+
+            icon:
+                day
+                    ? ICONS.sun
+                    : ICONS.moon,
+
+            desc: "快晴",
+
+            bg:
+                day
+                    ? "linear-gradient(165deg,#6fb1f0 0%,#3a7fd6 55%,#2e63b0 100%)"
+                    : "linear-gradient(165deg,#14213d 0%,#0b1530 60%,#060a1a 100%)"
+        };
+    }
+
+    if (code === 1 || code === 2) {
+
+        return {
+
+            icon:
+                day
+                    ? ICONS.cloudSun
+                    : ICONS.cloud,
+
+            desc: "一部くもり",
+
+            bg:
+                day
+                    ? "linear-gradient(165deg,#7db8e8 0%,#4d84c4 55%,#3a6aa3 100%)"
+                    : "linear-gradient(165deg,#262f45 0%,#171d30 60%,#10141f 100%)"
+        };
+    }
+
+    if (code === 3) {
+
+        return {
+
+            icon: ICONS.cloud,
+
+            desc: "くもり",
+
+            bg:
+                "linear-gradient(165deg,#8b98a6 0%,#6b7786 55%,#545e6b 100%)"
+        };
+    }
+
+    if (code === 45 || code === 48) {
+
+        return {
+
+            icon: ICONS.fog,
+
+            desc: "霧",
+
+            bg:
+                "linear-gradient(165deg,#9aa5b1 0%,#7c8794 55%,#636d78 100%)"
+        };
+    }
+
+    if (
+        [
+            51, 53, 55,
+            61, 63, 65,
+            80, 81, 82
+        ].includes(code)
+    ) {
+
+        return {
+
+            icon: ICONS.rain,
+
+            desc:
+                code >= 80
+                    ? "にわか雨"
+                    : "雨",
+
+            bg:
+                "linear-gradient(165deg,#5b7186 0%,#3d5163 55%,#2b3a49 100%)"
+        };
+    }
+
+    if (
+        [
+            71, 73, 75,
+            77, 85, 86
+        ].includes(code)
+    ) {
+
+        return {
+
+            icon: ICONS.snow,
+
+            desc: "雪",
+
+            bg:
+                "linear-gradient(165deg,#93b3d1 0%,#6f93b8 55%,#56779c 100%)"
+        };
+    }
+
+    if (
+        [
+            95, 96, 99
+        ].includes(code)
+    ) {
+
+        return {
+
+            icon: ICONS.thunder,
+
+            desc: "雷雨",
+
+            bg:
+                "linear-gradient(165deg,#4a4f63 0%,#33374a 55%,#212433 100%)"
+        };
+    }
+
+    return {
+
+        icon: ICONS.cloud,
+
+        desc: "不明",
+
+        bg:
+            "linear-gradient(165deg,#6fb1f0 0%,#3a7fd6 55%,#2e63b0 100%)"
+    };
+}
+
+
+function showWeatherError(
+    message,
+    isHtml
+) {
+
+    const el =
+        document.getElementById(
+            "weatherError"
+        );
+
+    if (!el) {
+        return;
+    }
+
+    if (isHtml) {
+        el.innerHTML = message;
+    } else {
+        el.textContent = message;
+    }
+
+    el.classList.add("show");
+}
+
+
+function clearWeatherError() {
+
+    const el =
+        document.getElementById(
+            "weatherError"
+        );
+
+    if (el) {
+        el.classList.remove("show");
+    }
+}
+
+
+async function requestJson(url) {
+
+    const controller =
+        new AbortController();
+
+    const timeout =
+        setTimeout(
+            () => controller.abort(),
+            8000
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    mode: "cors",
+                    cache: "no-store",
+                    signal: controller.signal
+                }
+            );
+
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
+
+        return await response.json();
+
+    } catch (fetchError) {
+
+        clearTimeout(timeout);
+
+        return await new Promise(
+            (resolve, reject) => {
+
+                try {
+
+                    const xhr =
+                        new XMLHttpRequest();
+
+                    xhr.timeout = 8000;
+
+                    xhr.open(
+                        "GET",
+                        url,
+                        true
+                    );
+
+                    xhr.onload =
+                        function () {
+
+                            if (
+                                xhr.status >= 200 &&
+                                xhr.status < 300
+                            ) {
+
+                                try {
+
+                                    resolve(
+                                        JSON.parse(
+                                            xhr.responseText
+                                        )
+                                    );
+
+                                } catch (parseError) {
+
+                                    reject(
+                                        new Error(
+                                            "JSON解析エラー: " +
+                                            parseError.message
+                                        )
+                                    );
+                                }
+
+                            } else {
+
+                                reject(
+                                    new Error(
+                                        "XHR HTTP " +
+                                        xhr.status
+                                    )
+                                );
+                            }
+                        };
+
+                    xhr.onerror =
+                        function () {
+
+                            reject(
+                                new Error(
+                                    "ネットワーク到達不可"
+                                )
+                            );
+                        };
+
+                    xhr.ontimeout =
+                        function () {
+
+                            reject(
+                                new Error(
+                                    "通信がタイムアウト"
+                                )
+                            );
+                        };
+
+                    xhr.send();
+
+                } catch (xhrSetupError) {
+
+                    reject(
+                        new Error(
+                            xhrSetupError.message
+                        )
+                    );
+                }
+            }
+        );
+    }
+}
+
+
+async function updateWeather() {
+
+    try {
+
+        const data =
+            await requestJson(
+                FORECAST_URL
+            );
+
+        const temp =
+            Math.round(
+                data.current.temperature_2m
+            );
+
+        const feels =
+            Math.round(
+                data.current.apparent_temperature
+            );
+
+        const humidity =
+            data.current.relative_humidity_2m;
+
+        const code =
+            data.current.weather_code;
+
+        const isDay =
+            data.current.is_day;
+
+        const high =
+            Math.round(
+                data.daily.temperature_2m_max[0]
+            );
+
+        const low =
+            Math.round(
+                data.daily.temperature_2m_min[0]
+            );
+
+        const info =
+            getWeatherInfo(
+                code,
+                isDay
+            );
+
+        document.getElementById(
+            "weatherIconWrap"
+        ).innerHTML =
+            info.icon;
+
+        document.getElementById(
+            "weatherConditionSmall"
+        ).textContent =
+            info.desc;
+
+        document.getElementById(
+            "weatherTemp"
+        ).textContent =
+            temp + "°";
+
+        document.getElementById(
+            "weatherHigh"
+        ).textContent =
+            high + "°";
+
+        document.getElementById(
+            "weatherLow"
+        ).textContent =
+            low + "°";
+
+        document.getElementById(
+            "weatherHumidity"
+        ).textContent =
+            humidity + "%";
+
+        document.getElementById(
+            "weatherFeels"
+        ).textContent =
+            feels + "°";
+
+        document.getElementById(
+            "weatherPanel"
+        ).style.background =
+            info.bg;
+
+        const now =
+            new Date();
+
+        document.getElementById(
+            "weatherUpdated"
+        ).textContent =
+            "更新 " +
+            String(now.getHours())
+                .padStart(2, "0") +
+            ":" +
+            String(now.getMinutes())
+                .padStart(2, "0");
+
+        clearWeatherError();
+
+    } catch (error) {
+
+        document.getElementById(
+            "weatherConditionSmall"
+        ).textContent =
+            "取得できません";
+
+        showWeatherError(
+            "取得失敗: " +
+            error.message,
+            false
+        );
+    }
+}
+
+
+updateWeather();
+
+
+function scheduleWeatherUpdate() {
+
+    const now =
+        new Date();
+
+    const minutes =
+        now.getMinutes();
+
+    const nextMultipleOf5 =
+        Math.ceil(
+            (minutes + 1) / 5
+        ) * 5;
+
+    const next =
+        new Date(now);
+
+    next.setMinutes(
+        nextMultipleOf5,
+        0,
+        0
+    );
+
+    const delay =
+        next.getTime() -
+        now.getTime();
+
+    setTimeout(
+        () => {
+
+            updateWeather();
+
+            setInterval(
+                updateWeather,
+                5 * 60 * 1000
+            );
+
+        },
+        delay
+    );
+}
+
+
+scheduleWeatherUpdate();
+
+
+
+</script>
+
+<script>
+/* =========================================================
+   追加機能: スリープ防止 (Wake Lock) / 夜間減光
+   ※上のスクリプトとは独立したブロック。既存の処理には触れない
+========================================================= */
+(function () {
+
+    /* ---------- 設定 ---------- */
+
+    const NIGHT_START_HOUR = 22;   // 減光を始める時刻 (22:00)
+    const NIGHT_END_HOUR   = 6;    // 減光を終える時刻 (06:00)
+    const NIGHT_DIM_LEVEL  = 0.6;  // 暗さ 0〜1 (大きいほど暗い)
+
+
+    /* ---------- スリープ防止 ---------- */
+
+    let wakeLock = null;
+    let wakeLockRequesting = false;
+
+    async function requestWakeLock() {
+
+        if (!("wakeLock" in navigator)) return;
+        if (wakeLock || wakeLockRequesting) return;
+        if (document.visibilityState !== "visible") return;
+
+        wakeLockRequesting = true;
+
+        try {
+
+            const lock = await navigator.wakeLock.request("screen");
+
+            wakeLock = lock;
+
+            lock.addEventListener("release", function () {
+                if (wakeLock === lock) wakeLock = null;
+            });
+
+        } catch (error) {
+
+            console.warn(
+                "Wake Lock を取得できませんでした:",
+                error && error.message
+            );
+
+        } finally {
+
+            wakeLockRequesting = false;
+        }
+    }
+
+    requestWakeLock();
+
+    // タブが隠れるとロックは自動で外れるので、戻ってきたら取り直す
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") {
+            requestWakeLock();
+        }
+    });
+
+    // 起動直後に拒否された場合に備えて、最初の操作でも取り直す
+    ["pointerdown", "touchstart", "click", "keydown"].forEach(function (name) {
+        document.addEventListener(name, requestWakeLock, { passive: true });
+    });
+
+    // 省電力モードなどで外された場合の保険 (60秒ごとに確認)
+    setInterval(requestWakeLock, 60 * 1000);
+
+
+    /* ---------- 夜間減光 ---------- */
+
+    const dimEl = document.getElementById("nightDim");
+
+    // URL の末尾に ?dim=on を付けると、昼でも減光を確認できる
+    const forceDim = /[?&]dim=on\b/.test(location.search);
+
+    function isNightHour(hour) {
+
+        if (NIGHT_START_HOUR === NIGHT_END_HOUR) return false;
+
+        if (NIGHT_START_HOUR < NIGHT_END_HOUR) {
+            return hour >= NIGHT_START_HOUR && hour < NIGHT_END_HOUR;
+        }
+
+        // 22時〜翌6時のように日付をまたぐ場合
+        return hour >= NIGHT_START_HOUR || hour < NIGHT_END_HOUR;
+    }
+
+    function updateNightDim() {
+
+        if (!dimEl) return;
+
+        const dim = forceDim || isNightHour(new Date().getHours());
+
+        dimEl.style.opacity = dim ? String(NIGHT_DIM_LEVEL) : "0";
+    }
+
+    updateNightDim();
+
+    setInterval(updateNightDim, 30 * 1000);
+
+    document.addEventListener("visibilitychange", updateNightDim);
+
+})();
+</script>
+
+<script>
+/* =========================================================
+   追加機能: スマホカード (Pixelの電池・通知)
+   ※上のスクリプトとは独立したブロック。既存の処理には触れない
+========================================================= */
+(function () {
+
+    /* ---------- 設定 ---------- */
+
+    // PixelのIPアドレスとポートに書き換える
+    const PHONE_API_URL = "http://192.168.68.66:8080/api/status";
+
+    const PHONE_POLL_MS    = 5000;   // 問い合わせ間隔 (5秒)
+    const PHONE_TIMEOUT_MS = 4000;   // これ以上待ったら未接続扱い
+
+    // URL の末尾に ?phone=demo を付けると、ダミーデータで見た目を確認できる
+    const demo = /[?&]phone=demo\b/.test(location.search);
+
+    // デモ用の仮アイコン (色つきの角丸に文字を入れたSVG)
+    function demoIcon(letter, color) {
+
+        const svg =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">' +
+            '<rect width="48" height="48" rx="11" fill="' + color + '"/>' +
+            '<text x="24" y="33" font-size="26" font-weight="700" text-anchor="middle" ' +
+            'fill="#fff" font-family="sans-serif">' + letter + '</text></svg>';
+
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
+    // システムだけ icon を付けていない (アイコンが無いときの表示の確認用)
+    const DEMO_DATA = {
+        battery: 78,
+        charging: true,
+        notifications: [
+            { app: "LINE",    icon: demoIcon("L", "#06C755"), title: "メッセージ",   text: "通知本文のサンプルです。長い文章は2行までで省略されます。", time: "08:51" },
+            { app: "Gmail",   icon: demoIcon("M", "#EA4335"), title: "新しいメール", text: "件名のサンプル",                                           time: "08:43" },
+            { app: "YouTube", icon: demoIcon("Y", "#FF0000"), title: "新着動画",     text: "チャンネルの新しい動画が公開されました",                   time: "08:20" },
+            { app: "システム",                                title: "アップデート", text: "システムアップデートを利用できます",                       time: "07:58" }
+        ]
+    };
+
+
+    /* ---------- 要素 ---------- */
+
+    const panelEl    = document.getElementById("phonePanel");
+    const statusEl   = document.getElementById("phoneStatusText");
+    const valueEl    = document.getElementById("phoneBatteryValue");
+    const fillEl     = document.getElementById("phoneBatteryFill");
+    const chargingEl = document.getElementById("phoneCharging");
+    const listEl     = document.getElementById("phoneNotifList");
+
+    if (!panelEl || !statusEl || !valueEl || !fillEl || !chargingEl || !listEl) return;
+
+
+    /* ---------- 表示 ---------- */
+
+    let lastOkTime = "";   // 最後に受信できた時刻 "HH:MM"
+    let lastRendered = ""; // 直前に描画したJSON (同じなら描き直さない)
+
+    function two(n) {
+        return n < 10 ? "0" + n : "" + n;
+    }
+
+    function make(tag, className, text) {
+        const e = document.createElement(tag);
+        if (className) e.className = className;
+        if (text !== undefined && text !== null) e.textContent = text;
+        return e;
+    }
+
+    // アイコンの画像アドレスを決める
+    // data:image/ か http(s) だけ許可。/api/icon/x.png のような相対パスはPixelのアドレス基準
+    function iconSrc(value) {
+
+        if (typeof value !== "string" || value === "") return "";
+
+        if (value.indexOf("data:image/") === 0) return value;
+
+        try {
+
+            const url = new URL(value, PHONE_API_URL);
+
+            return (url.protocol === "http:" || url.protocol === "https:")
+                ? url.href
+                : "";
+
+        } catch (error) {
+
+            return "";
+        }
+    }
+
+    // アイコンが無い・読み込めないときの代わり (アプリ名の頭文字。色はアプリ名ごとに固定)
+    function fallbackIcon(appName) {
+
+        const name = String(appName || "?").trim() || "?";
+
+        let hue = 0;
+
+        for (let i = 0; i < name.length; i++) {
+            hue = (hue * 31 + name.charCodeAt(i)) % 360;
+        }
+
+        // 似た名前でも色が離れるようにばらけさせる
+        hue = (hue * 137) % 360;
+
+        const box = make("div", "phone-notif-icon fallback", Array.from(name)[0].toUpperCase());
+
+        box.style.background = "hsl(" + hue + ", 45%, 38%)";
+
+        return box;
+    }
+
+    function makeIcon(n) {
+
+        const src = iconSrc(n.icon);
+
+        if (!src) return fallbackIcon(n.app);
+
+        const img = make("img", "phone-notif-icon");
+
+        img.alt = "";
+        img.src = src;
+
+        // 読み込めなかったら頭文字の表示に差し替える
+        img.onerror = function () {
+            if (img.parentNode) {
+                img.parentNode.replaceChild(fallbackIcon(n.app), img);
+            }
+        };
+
+        return img;
+    }
+
+    function setOnline(online) {
+
+        panelEl.classList.toggle("online", online);
+
+        if (online) {
+            statusEl.textContent = "接続中";
+        } else {
+            statusEl.textContent =
+                lastOkTime ? "未接続  最終 " + lastOkTime : "未接続";
+        }
+    }
+
+    function render(data) {
+
+        const json = JSON.stringify(data);
+
+        if (json === lastRendered) return;
+
+        lastRendered = json;
+
+        // 電池
+        let battery = (data && data.battery != null) ? Number(data.battery) : NaN;
+
+        if (isFinite(battery)) {
+            battery = Math.max(0, Math.min(100, Math.round(battery)));
+            valueEl.textContent = battery + "%";
+            fillEl.style.width = battery + "%";
+        } else {
+            valueEl.textContent = "--%";
+            fillEl.style.width = "0%";
+        }
+
+        chargingEl.classList.toggle("show", !!(data && data.charging));
+
+        // 通知 (textContent で入れるので、本文にタグが入っていても実行されない)
+        const scrollTop = listEl.scrollTop;
+
+        const items = (data && Array.isArray(data.notifications))
+            ? data.notifications
+            : [];
+
+        listEl.textContent = "";
+
+        if (items.length === 0) {
+
+            listEl.appendChild(make("div", "phone-notif-empty", "通知はありません"));
+
+        } else {
+
+            items.forEach(function (n) {
+
+                if (!n || typeof n !== "object") return;
+
+                const item = make("div", "phone-notif");
+                const body = make("div", "phone-notif-body");
+                const head = make("div", "phone-notif-head");
+
+                head.appendChild(make("span", "phone-notif-app", n.app || ""));
+                head.appendChild(make("span", "phone-notif-time", n.time || ""));
+                body.appendChild(head);
+
+                if (n.title) {
+                    body.appendChild(make("div", "phone-notif-subject", n.title));
+                }
+
+                if (n.text) {
+                    body.appendChild(make("div", "phone-notif-text", n.text));
+                }
+
+                item.appendChild(makeIcon(n));
+                item.appendChild(body);
+
+                listEl.appendChild(item);
+            });
+        }
+
+        listEl.scrollTop = scrollTop;
+    }
+
+
+    /* ---------- 取得 ---------- */
+
+    async function pollPhone() {
+
+        if (document.hidden) return;
+
+        if (demo) {
+            render(DEMO_DATA);
+            setOnline(true);
+            return;
+        }
+
+        const controller = new AbortController();
+
+        const timer = setTimeout(function () {
+            controller.abort();
+        }, PHONE_TIMEOUT_MS);
+
+        try {
+
+            const res = await fetch(PHONE_API_URL, {
+                cache: "no-store",
+                signal: controller.signal
+            });
+
+            if (!res.ok) throw new Error("HTTP " + res.status);
+
+            const data = await res.json();
+
+            render(data);
+
+            const now = new Date();
+            lastOkTime = two(now.getHours()) + ":" + two(now.getMinutes());
+
+            setOnline(true);
+
+        } catch (error) {
+
+            setOnline(false);
+
+        } finally {
+
+            clearTimeout(timer);
+        }
+    }
+
+    pollPhone();
+
+    setInterval(pollPhone, PHONE_POLL_MS);
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") pollPhone();
+    });
+
+})();
+</script>
+
+<script>
+/* =========================================================
+   追加機能: 右側カードのスクロール白丸
+   ※上のスクリプトとは独立したブロック。カードが増えても白丸は自動で増える
+========================================================= */
+(function () {
+
+    const pagesEl     = document.getElementById("rightPages");
+    const indicatorEl = document.getElementById("rightIndicator");
+
+    if (!pagesEl || !indicatorEl) return;
+
+    const pageEls = pagesEl.querySelectorAll(".right-page");
+
+    if (pageEls.length === 0) return;
+
+    // カードの枚数ぶん白丸を作る (見た目は左側と同じ .scroll-dot)
+    const dots = [];
+
+    for (let i = 0; i < pageEls.length; i++) {
+
+        const dot = document.createElement("div");
+
+        dot.className = "scroll-dot";
+        dot.setAttribute("data-index", String(i));
+
+        indicatorEl.appendChild(dot);
+        dots.push(dot);
+    }
+
+    function update() {
+
+        const pageHeight = pagesEl.clientHeight;
+
+        if (pageHeight <= 0) return;
+
+        let index = Math.round(pagesEl.scrollTop / pageHeight);
+
+        index = Math.max(0, Math.min(pageEls.length - 1, index));
+
+        dots.forEach(function (dot, i) {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    pagesEl.addEventListener("scroll", update, { passive: true });
+
+    window.addEventListener("resize", update);
+
+    update();
+
+})();
+</script>
+</body>
+</html>
