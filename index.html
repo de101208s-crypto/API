@@ -3189,6 +3189,16 @@ scheduleWeatherUpdate();
     update();
 
 })();
+<script>
+function enterFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    }
+}
+
+window.addEventListener('click', enterFullscreen);
+window.addEventListener('touchstart', enterFullscreen);
 </script>
+
 </body>
 </html>
